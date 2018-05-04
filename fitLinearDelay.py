@@ -3,8 +3,11 @@
 #Here tracer concentration (C) is assumed to be proportional to S-S0 where S0 is
 #the precontrast signal and the delay in the arrival of bolus from artery to the tissue of interest 
 #has been incorporated using the function 'add_delay'.
+
 #Input data: Three files (aif, LK, RK) for S-t curve per patient, One file per study containing 
-#functional volume of kidneys, One file per study containing reference GFR values. 
+#functional volume of kidneys, One file per study containing reference GFR values.  These files are stored in the 
+#folder 'ROIdata'.
+
 #Output data: One file per study containing all the fitting parameters such as
 #blood flow, blood mean transit time (MTT), blood volume, tubular MTT, exraction franction,
 #tubular flow, GFR and isotope GFR.
