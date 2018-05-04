@@ -2,8 +2,11 @@
 #right (RK) and left kidney (LK) ROIs and fits them using a two compartment filtration model (2CFM).
 #Here we assume that tracer concentration (C) is proportional to S-S0 where S0 is
 #the precontrast signal. 
+
 #Input data: Three files per patient (aif, LK, RK) for S-t curve, One file per study containing 
-#functional volume of kidneys, One file per study containing reference GFR values. 
+#functional volume of kidneys, One file per study containing reference GFR values. These files are stored in the 
+#folder 'ROIdata'.
+
 #Output data: One file per study containing all the fitting parameters such as
 #blood flow, blood mean transit time (MTT), blood volume, tubular MTT, exraction franction,
 #tubular flow, GFR and isotope GFR.
