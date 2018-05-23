@@ -38,7 +38,7 @@ r = 3.6 # Relaxivity in Hz/mM, used in function Concentration_SPGRESS
 s = [-10,10,0.5] # Delay values: minimum, maximum and step size, used in function add_delay
 
 study = [ 'MRH008_wellcome','PANDA','NKRF','1Tdata'] # Study groups #
-path_data = 'C:/Users/medsbasa/Work/Data_Analysis/Data_Source'
+path_data = 'Basak_et_al_2018/ROIdata/' # Path to files with S-t curves 
 model =  'Linear'#'Nonlinear'# 'Delay'#
 
 ## Loop over study groups ##
