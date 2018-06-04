@@ -31,13 +31,13 @@
 #ShiftAif(aif, Time, Delay) shifts the aif curve by a delay time using
 # the formula aif(shifted) = aif(Time - Delay).
 
-#add_delay(P,Time, aif,roi_new,s,nid) determines the delay value by fitting the C-t curve for a range 
+#add_delay(P,Time, aif,roi_new,s,nid,fit_model) determines the delay value by fitting the C-t curve for a range 
 #of delay values and seleting the one for which the least-square error is minimum.  Finally, it returns
 #the fitted tissue parameters and tissue curve for the chosen delay value. 
 #Argument
 #s = array of three values- minimum value of delay, maxmum value of delay and step size.
 #nid = patient id. 
-#kid = kidney id, RK (right kideny) or LK (left kidney).
+#fit_model = Model used to fit the C-t curve, either 'uptake' or '2CFM'
 
 
 import numpy as np
@@ -111,7 +111,7 @@ def ShiftAif(aif, Time, Delay):
         ShAif[0:nneg-1] = 0
     return ShAif
 
-def add_delay(P,Time, aif,roi_new,s,nid,kid):
+def add_delay(P,Time, aif,roi_new,s,nid,fit_model):
     n = 1+(s[1]-s[0])/s[2]
     Delay = s[0] + s[2]*np.arange(n)
     Error = Delay*0
@@ -128,10 +128,10 @@ def add_delay(P,Time, aif,roi_new,s,nid,kid):
         else:
             roi_del = roi_new
             
-        if nid=='AC 51a' and kid == 'RK':
+        if fit_model == 'uptake':
             res = least_squares(fun_uptake, P, method='lm',  args=(Time, roi_del,aif_del),max_nfev=20000, verbose=0)       
             fit = model_uptake(res.x,Time, aif_del)
-        else:    
+        elif fit_model == '2CFM':    
             res = least_squares(fun_2CFM, P, method='lm',  args=(Time, roi_del,aif_del),max_nfev=20000, verbose=0) 
             fit = model_2CFM(res.x,Time,aif_del) 
           
@@ -143,7 +143,7 @@ def add_delay(P,Time, aif,roi_new,s,nid,kid):
         nd = abs(int(round(Delay[i]/(Time[1]-Time[0]))))
         nT = len(Time)
         Error[i] =  100*np.sum((roi_new[0:nT-nd-1]-fit_shft[0:nT-nd-1])**2)/(np.sum(roi_new[0:nT-nd-1]**2))
-        
+           
     imin = np.where(Error==Error.min())
     Delay = Delay[imin]
     #print('imin=',imin)
@@ -158,13 +158,13 @@ def add_delay(P,Time, aif,roi_new,s,nid,kid):
     else:
         roi_del = roi_new
         
-    if nid=='AC 51a' and kid == 'RK':
+    if fit_model == 'uptake':
         res = least_squares(fun_uptake, P, method='lm',  args=(Time, roi_del,aif_del),max_nfev=20000, verbose=0)       
         fit = model_uptake(res.x,Time, aif_del)
-    else:
+    elif fit_model == '2CFM':
         res = least_squares(fun_2CFM, P, method='lm',  args=(Time, roi_del,aif_del),max_nfev=20000, verbose=1) 
         fit = model_2CFM(res.x,Time, aif_del)    
         
     if Delay < 0 :
         fit = np.interp(Time-Delay, Time, fit)    
-    return res, fit     
+    return  res, fit
